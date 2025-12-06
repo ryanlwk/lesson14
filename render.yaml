@@ -5,7 +5,7 @@ projects:
   - name: Production
     services:
     - type: web
-      name: min-monorepo backend
+      name: min-monorepo-backend
       runtime: python
       repo: https://github.com/foongsy/min-monorepo
       plan: free
