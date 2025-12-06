@@ -1,0 +1,24 @@
+version: "1"
+projects:
+- name: My project
+  environments:
+  - name: Production
+    services:
+    - type: web
+      name: min-monorepo backend
+      runtime: python
+      repo: https://github.com/foongsy/min-monorepo
+      plan: free
+      envVars:
+      - key: ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGINS
+        sync: false
+      region: singapore
+      buildCommand: uv sync --no-dev
+      startCommand: uv run main.py
+      healthCheckPath: /health
+      autoDeployTrigger: commit
+      rootDir: backend
