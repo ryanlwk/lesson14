@@ -6,6 +6,8 @@ Initialize the frontend directory using Vite with React TypeScript. This command
 2. Detect available package manager (prefers `bun`, falls back to `npm`)
 3. Scaffold a new Vite + React + TypeScript project in the `frontend/` directory
 4. Configure Vite to proxy `/api` requests to the backend during development
+5. Set up Tailwind CSS for styling
+6. Initialize shadcn/ui component library
 
 ## Steps
 
@@ -47,11 +49,46 @@ Initialize the frontend directory using Vite with React TypeScript. This command
    - Navigate to `frontend/` directory
    - Run: `bun install` (if using bun) or `npm install` (if using npm)
 
-6. **Update package.json scripts (if needed):**
+6. **Set up Tailwind CSS:**
+   - Install Tailwind CSS and dependencies:
+     - `bun add -d tailwindcss postcss autoprefixer` (if using bun)
+     - `npm install -D tailwindcss postcss autoprefixer` (if using npm)
+   - Initialize Tailwind config: `bunx tailwindcss init -p` (or `npx tailwindcss init -p`)
+   - Update `tailwind.config.js` to include content paths:
+     ```javascript
+     /** @type {import('tailwindcss').Config} */
+     export default {
+       content: [
+         "./index.html",
+         "./src/**/*.{js,ts,jsx,tsx}",
+       ],
+       theme: {
+         extend: {},
+       },
+       plugins: [],
+     }
+     ```
+   - Update `src/index.css` to include Tailwind directives:
+     ```css
+     @tailwind base;
+     @tailwind components;
+     @tailwind utilities;
+     ```
+
+7. **Initialize shadcn/ui:**
+   - Run: `bunx shadcn@latest init` (or `npx shadcn@latest init`) from the `frontend/` directory
+   - Accept default prompts (or configure as needed):
+     - Style: Default
+     - Base color: Slate
+     - CSS variables: Yes
+   - This creates `components.json` and sets up the `src/components/ui/` directory structure
+   - Note: shadcn/ui components are copied into your project (not installed as npm package)
+
+8. **Update package.json scripts (if needed):**
    - Ensure scripts use the detected package manager consistently
    - If using bun, scripts can use `bun` directly
 
-7. **Add API endpoint check to App.tsx:**
+9. **Add API endpoint check to App.tsx:**
    - Update `frontend/src/App.tsx` to include an API check on component mount
    - Add a `useEffect` hook that calls `/api/hello` endpoint
    - Display the API message in the UI
@@ -90,3 +127,6 @@ Initialize the frontend directory using Vite with React TypeScript. This command
 - This avoids maintaining static frontend files in the template
 - Users get the latest Vite and React versions automatically
 - Bun is preferred for faster installs, but npm is a reliable fallback
+- Tailwind CSS and shadcn/ui are configured by default (as specified in frontend-dev rules)
+- ESLint config is included in the Vite React TypeScript template
+- To add shadcn components later: `bunx shadcn@latest add <component-name>` (or `npx shadcn@latest add <component-name>`)

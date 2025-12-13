@@ -4,148 +4,86 @@ alwaysApply: false
 # Backend Development Rules
 
 **CRITICAL: Backend Isolation**
-When working on backend tasks, you MUST:
 - Only modify files within `/backend` directory
 - NEVER modify frontend code, config, or dependencies
-- NEVER change root-level configuration files
-- Set working directory to `/backend` for all backend operations
+- Set working directory to `/backend` for all operations
 
 ## Tech Stack
 
-**Runtime & Framework:**
-- Python 3.13+
-- FastAPI web framework
-- Uvicorn ASGI server
-
-**Package Management:**
-- Use `uv` exclusively (NEVER use pip)
-- Dependencies: `pyproject.toml`
-- Lock file: `uv.lock`
-- Install: `uv sync`
-- Add package: `uv add <package>`
-- Run commands: `uv run <command>`
-
-**Configuration:**
-- Settings: Pydantic Settings in `app/config.py`
-- Environment: `.env` file (never commit this)
-- CORS: `app/cors.py`
+- Python 3.13+, FastAPI, Uvicorn
+- Package manager: `uv` (NEVER pip)
+- Commands: `uv sync`, `uv add <package>`, `uv run <command>`
+- Config: Pydantic Settings in `app/config.py`, `.env` file, CORS in `app/cors.py`
 
 ## Project Structure
 
 ```
 backend/
-├── main.py              # FastAPI app entry point
-├── pyproject.toml       # Python dependencies
-├── uv.lock              # Dependency lock file
-├── .env                 # Environment variables (gitignored)
+├── main.py              # Entry point
+├── pyproject.toml       # Dependencies
+├── uv.lock              # Lock file
 └── app/
-    ├── __init__.py
-    ├── config.py        # Pydantic settings
-    ├── cors.py          # CORS configuration
-    └── routes/          # API route modules
-        ├── __init__.py
-        └── api.py
+    ├── config.py        # Settings
+    ├── cors.py          # CORS
+    └── routes/          # API routes
 ```
 
 ## Development Guidelines
 
 **API Endpoints:**
-- All endpoints MUST be prefixed with `/api`
-- Use FastAPI router pattern for organization
+- Prefix all endpoints with `/api`
 - Define routes in `app/routes/` modules
-- Follow REST conventions
+- Use FastAPI router pattern
 
 **Code Style:**
-- **REQUIRED: Full type hinting for all Python code**
-  - All function parameters must have type hints
-  - All function return types must be annotated
-  - Use `typing` module for complex types (List, Dict, Optional, etc.)
-  - No implicit `Any` types - be explicit
-- Follow PEP 8 style guide
-- Use Pydantic models for request/response validation
-- Keep route handlers thin, extract business logic to services
+- **REQUIRED: Full type hints** - all parameters and return types must be annotated
+- Use `typing` module for complex types (List, Dict, Optional, etc.)
+- No implicit `Any` types
+- Use Pydantic models for validation
+- Follow PEP 8
 
-**Running the Backend:**
-- Development: `uv run main.py`
-- Always run from `/backend` directory
-- Default port: 8000
-- Auto-reload enabled in development (configured in main.py)
+**Running:**
+- `cd backend && uv run main.py` (port 8000, auto-reload enabled)
 
 **API Contract:**
-- OpenAPI schema auto-generated at `/openapi.json`
-- When you modify endpoints, the schema updates automatically
-- Frontend will regenerate types from this schema
-- Document all endpoints with FastAPI docstrings
+- OpenAPI schema at `/openapi.json` (auto-generated)
+- Document endpoints with FastAPI docstrings
 
 ## File Modification Rules
 
-**You MAY modify:**
-- Any Python file in `/backend`
-- `pyproject.toml` for dependencies
-- `.env.example` for documenting env vars
-- Route files in `app/routes/`
-- Config files in `app/`
-
-**You MUST NOT modify:**
-- Any file in `/frontend` (if it exists)
-- Root `README.md` (unless explicitly requested)
-- Frontend configuration (package.json, vite.config.ts, etc.)
-- `.cursor/rules/` files (unless explicitly requested)
-- `.cursor/commands/` files (unless explicitly requested)
+**MAY modify:** Files in `/backend`, `pyproject.toml`, `.env.example`
+**MUST NOT modify:** `/frontend`, root `README.md`, frontend configs, `.cursor/` files
 
 ## Common Tasks
 
-**Adding a new endpoint:**
-1. Create/update route file in `app/routes/`
-2. Define Pydantic models for request/response with full type hints
-3. Implement route handler with complete type annotations (params, return type)
+**New endpoint:**
+1. Create/update route in `app/routes/`
+2. Define Pydantic models with type hints
+3. Implement handler with full type annotations
 4. Include router in `main.py` if new file
-5. Test endpoint manually or with tests
 
-**Adding a dependency:**
-```bash
-cd backend
-uv add <package-name>
-```
+**Dependencies:** `cd backend && uv add <package>`
+**Env vars:** Add to `app/config.py`, document in `.env.example`
 
-**Updating dependencies:**
-```bash
-cd backend
-uv sync
-```
+## Checklist
 
-**Environment variables:**
-1. Add to `app/config.py` Settings class
-2. Document in `.env.example`
-3. Never hardcode secrets
+- [ ] Changes only in `/backend`
+- [ ] Complete type hints (params + return types)
+- [ ] Endpoints prefixed with `/api`
+- [ ] Dependencies via `uv add`
+- [ ] Env vars documented
 
-## Testing Checklist
+## Frontend Integration
 
-Before completing a backend task:
-- [ ] All changes are within `/backend` directory
-- [ ] No modifications to frontend files
-- [ ] Dependencies added via `uv add` if needed
-- [ ] Environment variables documented in `.env.example`
-- [ ] API endpoints follow `/api` prefix convention
-- [ ] **All functions have complete type hints (parameters AND return types)**
-- [ ] No implicit `Any` types - all types explicitly declared
-- [ ] CORS configuration appropriate for endpoints
+- Complete backend changes first
+- Verify `/openapi.json` schema
+- Inform user if frontend updates needed
+- Do NOT modify frontend unless explicitly requested
 
-## Integration with Frontend
+## Deployment
 
-When backend API changes affect frontend:
-1. Complete backend changes first
-2. Verify OpenAPI schema at `/openapi.json`
-3. Test endpoints manually (curl, Postman, or browser)
-4. **Inform user** if frontend code needs updates
-5. Do NOT modify frontend code unless explicitly in scope
-6. Frontend uses simple fetch API (no type generation by default)
-
-## Deployment Notes
-
-Backend can be deployed to various platforms. The entry point supports production mode:
-- Entry point: `main.py` (contains uvicorn runner)
-- Build command: `uv sync`
-- Start command: `uv run main.py`
-- Environment variable `ENV=production` disables auto-reload
-- PORT can be configured via environment variable (defaults to 8000)
+- Entry: `main.py` (contains uvicorn runner)
+- Build: `uv sync`
+- Start: `uv run main.py`
+- `ENV=production` disables auto-reload
+- `PORT` env var (defaults to 8000)
