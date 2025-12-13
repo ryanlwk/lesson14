@@ -11,8 +11,8 @@ alwaysApply: false
 
 ## Tech Stack
 - React 19+ with TypeScript, Vite (HMR enabled)
-- UI: shadcn/ui (default), Tailwind CSS
-- Config files: `vite.config.ts`, `tsconfig.json`, `eslint.config.js`, `.env` (gitignored)
+- UI: shadcn/ui (default), Tailwind CSS (via `@tailwindcss/vite` plugin)
+- Config files: `vite.config.ts`, `tsconfig.json`, `tsconfig.app.json`, `eslint.config.js`, `.env` (gitignored)
 
 ## Project Structure
 ```
@@ -37,11 +37,13 @@ frontend/
 
 **UI Components Library:**
 - **Default: shadcn/ui** - Copy components into your project (not installed as npm package)
-- Add components: `npx shadcn@latest add <component-name>` (run from `/frontend`)
+- Add components: `bunx shadcn@latest add <component-name>` (or `npx shadcn@latest add <component-name>`) - run from `/frontend`
 - Components are copied to `src/components/ui/` - customize as needed
-- Uses Tailwind CSS (auto-configured by `@init-frontend`)
+- Uses Tailwind CSS via `@tailwindcss/vite` plugin (auto-configured by `@init-frontend`)
+- Tailwind CSS: `src/index.css` contains `@import "tailwindcss";` (no separate config file needed)
 - Prefer shadcn components over building from scratch
 - Browse components: https://ui.shadcn.com/docs/components
+- Official setup guide: https://ui.shadcn.com/docs/installation/vite
 
 **Running:**
 - Dev: `bun run dev` (or `npm run dev`) from `/frontend` → `http://localhost:5173`
