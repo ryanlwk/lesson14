@@ -1,0 +1,175 @@
+---
+alwaysApply: false
+---
+
+## alwaysApply: true
+
+# UI Design Rules - shadcn/ui Component Usage
+
+## Core Principle
+
+**ALWAYS use shadcn/ui components for all UI elements throughout the application.** Never create custom UI components from scratch when a shadcn/ui component exists or can be adapted.
+
+## ⚠️ IMPORTANT: Advisory-Only Approach
+
+**DO NOT make direct code changes when applying this rule.** Instead:
+
+1. ✅ **Search and identify** appropriate shadcn components using MCP tools
+2. ✅ **Provide recommendations** with component names and usage examples
+3. ✅ **Show the command** to add components (e.g., `npx shadcn@latest add button`)
+4. ✅ **Present implementation guidance** with code examples
+5. ✅ **Wait for explicit user confirmation** before making any code changes
+
+**The workflow should be:**
+
+- Advise → Show options → Get confirmation → Implement
+
+**Never:**
+
+- ❌ Automatically add shadcn components to the project
+- ❌ Modify existing component files without explicit permission
+- ❌ Make bulk changes to the UI without user approval
+- ❌ Override user preferences or decisions
+
+## Required Workflow Before Any UI Implementation
+
+### Step 1: Check Available Components via shadcn MCP
+
+Before suggesting or implementing any UI element, you MUST:
+
+1. **Get project registries:**
+
+   - Use `mcp_shadcn_get_project_registries` to check configured registries
+   - This reads from `components.json` to understand the project setup
+
+2. **Search for relevant components:**
+
+   - Use `mcp_shadcn_search_items_in_registries` with descriptive queries
+   - Examples: "button", "form", "dialog", "table", "card", "input", "select", "dropdown"
+   - Search for patterns like "form-demo", "button example", "card-demo" for usage examples
+
+3. **View component details:**
+
+   - Use `mcp_shadcn_view_items_in_registries` to see component structure and files
+   - Review component props, dependencies, and implementation details
+
+4. **Get usage examples:**
+
+   - Use `mcp_shadcn_get_item_examples_from_registries` to find complete implementation examples
+   - Look for demo patterns: `{component-name}-demo`, `{component-name} example`
+
+5. **Get add command:**
+   - Use `mcp_shadcn_get_add_command_for_items` to get the CLI command to add components
+   - Provide this command to the user if components need to be added
+
+### Step 2: Component Selection Guidelines
+
+**When a shadcn component exists:**
+
+- ✅ Use the shadcn component directly
+- ✅ Import from `@/components/ui/{component-name}`
+- ✅ Follow the patterns from the MCP examples
+- ✅ Use shadcn's built-in styling and theming
+
+**When no exact match exists:**
+
+- ✅ Search for similar/composable components (e.g., use Dialog + Form for modals)
+- ✅ Combine multiple shadcn components to achieve the desired UI
+- ✅ Check for related components (e.g., if no "wizard", check "stepper" or "tabs")
+- ✅ Only suggest custom components as a last resort
+
+**When components need to be added:**
+
+- ✅ Provide the exact `shadcn add` command from MCP
+- ✅ Advise user to run: `npx shadcn@latest add <component-name>`
+- ✅ Wait for component to be added before implementing
+
+### Step 3: Implementation Standards
+
+**Import paths:**
+
+- Always use: `import { ComponentName } from "@/components/ui/component-name"`
+- Use path aliases configured in `tsconfig.json` (`@/*` → `./src/*`)
+
+**Styling:**
+
+- Use Tailwind CSS classes (already configured)
+- Leverage shadcn CSS variables from `index.css`:
+  - `bg-background`, `text-foreground` for colors
+  - `border-border` for borders
+  - Component-specific variables (e.g., `--primary`, `--secondary`)
+- Use the `cn()` utility from `@/lib/utils` for conditional classes
+
+**Component composition:**
+
+- Compose shadcn components together (e.g., Card + Button + Dialog)
+- Use shadcn's built-in variants and props
+- Follow shadcn's accessibility patterns
+
+**Icons:**
+
+- Use `lucide-react` (configured in `components.json`)
+- Import: `import { IconName } from "lucide-react"`
+
+## Advisory Approach
+
+When implementing UI:
+
+1. **First, advise the user:**
+
+   - "I found a shadcn component that matches: [component-name]"
+   - "You'll need to add it first: `npx shadcn@latest add [component-name]`"
+   - "Here's how to use it based on the shadcn examples:"
+
+2. **Provide guidance:**
+
+   - Show the component structure from MCP
+   - Reference example code from MCP
+   - Explain how to compose components if needed
+
+3. **Wait for confirmation:**
+   - Don't add components automatically unless explicitly asked
+   - Don't modify `components.json` directly
+   - Let the user run the `shadcn add` command
+
+## Common UI Patterns → shadcn Components
+
+- **Forms**: Use `form`, `input`, `label`, `button`, `select`, `checkbox`, `radio-group`
+- **Modals/Dialogs**: Use `dialog` or `sheet`
+- **Navigation**: Use `tabs`, `navigation-menu`, or `sidebar`
+- **Data Display**: Use `table`, `card`, `badge`, `avatar`
+- **Feedback**: Use `alert`, `toast`, `skeleton`, `progress`
+- **Overlays**: Use `popover`, `tooltip`, `dropdown-menu`
+- **Layout**: Use `separator`, `scroll-area`, `aspect-ratio`
+
+## Prohibited Practices
+
+❌ **Never** create custom button, input, or form components when shadcn equivalents exist
+❌ **Never** bypass the shadcn MCP - always check available components first
+❌ **Never** use inline styles or custom CSS when Tailwind + shadcn variables suffice
+❌ **Never** suggest third-party component libraries without checking shadcn first
+❌ **Never** implement UI without first searching the shadcn registry
+
+## Example Workflow
+
+**User request:** "Add a login form"
+
+**Your response should be:**
+
+1. "Let me check available shadcn components for forms..."
+2. Use MCP to search for "form", "input", "button", "label"
+3. "I found these shadcn components: form, input, button, label"
+4. "You'll need to add them: `npx shadcn@latest add form input button label`"
+5. "Here's an example implementation based on shadcn patterns: [show example from MCP]"
+6. "Once you've added the components, I can help implement the login form."
+
+## Project Configuration
+
+- **Style**: new-york (from `components.json`)
+- **Base color**: neutral
+- **CSS variables**: Enabled
+- **Icon library**: lucide-react
+- **Component path**: `@/components/ui`
+- **Utils path**: `@/lib/utils`
+
+Always respect these settings when suggesting or implementing components.
